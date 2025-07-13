@@ -5,7 +5,6 @@ import { ion } from "starlight-ion-theme";
 
 // https://astro.build/config
 export default defineConfig({
-	base: '/docs/',
 	integrations: [
 		starlight({
 			title: 'LXMFy Bot Framework',
