@@ -1,0 +1,97 @@
+---
+title: LXMFy Bot Framework
+---
+
+Easily create [LXMF](https://github.com/markqvist/LXMF) bots for the [Reticulum Network](https://reticulum.network/) with this framework.
+
+```bash
+pip install lxmfy
+```
+
+<details>
+<summary>Pipx Install</summary>
+```bash
+pipx install lxmfy
+```
+</details>
+
+<details>
+<summary>uv Install</summary>
+```bash
+uv venv
+uv pip install lxmfy
+```
+</details>
+
+## Commands
+
+```bash
+lxmfy create
+lxmfy create mybot
+lxmfy create --template echo mybot
+lxmfy create --template reminder bot
+lxmfy create --template note notes
+lxmfy create --template cogtest test
+lxmfy run echo
+lxmfy run reminder --name "MyReminder"
+lxmfy run note
+lxmfy run cogtest
+```
+
+## Features
+
+| Feature              | Description                                        |
+| :------------------- | :------------------------------------------------- |
+| First Message Handler | Custom welcome messages for new users              |
+| Storage Options      | SQLite or JSON storage                             |
+| Permission System    | Role-based access control with hierarchical permissions |
+| Hot Reloading        | Cog system for modular bot development             |
+| Moderation           | Built-in commands for user management              |
+| Help System          | Automatic command documentation and help           |
+| Spam Protection      | Rate limiting and protection                       |
+| Transport Layer      | Path discovery and caching                         |
+
+## Bots Created with LXMFy 
+
+| Project Name          | Description                   | Author      |
+| :-------------------- | :---------------------------- | :---------- |
+| [Ollama Bot](https://github.com/lxmfy/ollama-bot) | Query LLM models              | lxmfy       |
+| [Weather Bot](https://github.com/lxmfy/weather-bot) | OpenWeatherMap Bot            | lxmfy       |
+| [JS8Call Bot](https://github.com/lxmfy/js8call-bot) | Receive JS8Call messages      | lxmfy       |
+| [News Bot](https://github.com/lxmfy/news-bot)   | Get your daily news feeds!    | lxmfy       |
+| [HA Conversations](https://github.com/metrafonic/lxmf-ha-conversations) | Home Assistant integration    | metrafonic  |
+
+## Example
+
+```python
+from lxmfy import LXMFBot, load_cogs_from_directory
+
+bot = LXMFBot(
+    name="LXMFy Test Bot", # Name of the bot that appears on the network.
+    announce=600, # Announce every 600 seconds, set to 0 to disable.
+    announce_enabled=True, # Set to False to disable all announces (both initial and periodic)
+    announce_immediately=True, # Set to False to disable initial announce
+    admins=["your_lxmf_hash_here"], # List of admin hashes.
+    hot_reloading=True, # Enable hot reloading.
+    command_prefix="/", # Set to None to process all messages as commands.
+    cogs_dir="cogs", # Specify cogs directory name.
+    rate_limit=5, # 5 messages per minute
+    cooldown=5, # 5 seconds cooldown
+    max_warnings=3, # 3 warnings before ban
+    warning_timeout=300, # Warnings reset after 5 minutes
+)
+
+# Dynamically load all cogs
+load_cogs_from_directory(bot)
+
+@bot.command(name="ping", description="Test if bot is responsive")
+def ping(ctx):
+    ctx.reply("Pong!")
+
+# Admin Only Command
+@bot.command(name="echo", description="Echo a message", admin_only=True)
+def echo(ctx, message: str):
+    ctx.reply(message)
+
+bot.run()
+```
